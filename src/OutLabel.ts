@@ -8,7 +8,7 @@ import {
     textSize,
 } from './helpers'
 import Size from './Size'
-import { ArcElement, Point } from 'chart.js'
+import { Point } from 'chart.js'
 import Rect from './Rect'
 import Center from './Center'
 import OutLabelsContext from './OutLabelsContext'
