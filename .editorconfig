@@ -1,0 +1,16 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+tab_width = 2
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+rulers = 128
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.ts]
+tab_width = 4

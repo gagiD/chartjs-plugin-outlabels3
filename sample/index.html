@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div style="width: 400px">
+      <canvas id="ctx" width="400" height="400"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
+    <script src="../dist/chartjs-plugin-outlabels.umd.js"></script>
+    <script>
+      let ctx = document.getElementById('ctx')
+
+      let chart = new window.Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+          datasets: [
+            {
+              label: 'Dataset 1',
+              data: [10, 5, 65, 33, 42],
+              backgroundColor: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+            },
+          ],
+        },
+        options: {
+          radius: '50%',
+          plugins: {
+            outlabels: {
+              display: true,
+            },
+          },
+        },
+        plugins: [window['chartjs-plugin-outlabels']],
+      })
+    </script>
+  </body>
+</html>

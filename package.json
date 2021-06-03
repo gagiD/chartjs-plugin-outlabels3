@@ -1,0 +1,35 @@
+{
+  "name": "chartjs-plugin-outlabels",
+  "version": "1.0.0",
+  "module": "dist/chartjs-plugin-outlabels.esm.js",
+  "browser": "dist/chartjs-plugin-outlabels.umd.js",
+  "browserMin": "dist/chartjs-plugin-outlabels.umd.min.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^19",
+    "@rollup/plugin-node-resolve": "^11",
+    "@rollup/plugin-typescript": "^8",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.0",
+    "rollup": "^2.50",
+    "tslib": "^2",
+    "typescript": "^4",
+    "chart.js": "^3"
+  },
+  "peerDependencies": {
+    "chart.js": "^3"
+  },
+  "dependencies": {},
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+  },
+  "files": [
+    "dist"
+  ]
+}
