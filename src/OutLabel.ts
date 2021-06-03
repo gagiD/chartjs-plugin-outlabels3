@@ -5,6 +5,7 @@ import OutLabelsOptions, {
 import { resolve, toPadding } from 'chart.js/helpers'
 import {
     drawRoundedRect,
+    getFontString,
     moveFromAnchor,
     parseFont,
     positionCenter,
@@ -130,7 +131,7 @@ export default class OutLabel {
                 resolve([fontConfig]) ?? fontConfig,
                 parseFloat(ctx.canvas.style.height.slice(0, -2))
             ),
-            padding: toPadding(resolve([config.padding, 0], context, index)),
+            padding: toPadding(resolve([config.padding], context, index)),
             textAlign: resolve([config.textAlign, 'left'], context, index),
         }
 
@@ -240,7 +241,7 @@ export default class OutLabel {
             x += this.textRect.width
         }
 
-        this.ctx.font = this.style.font.string
+        this.ctx.font = getFontString(this.style.font)
         this.ctx.fillStyle = color
         this.ctx.textAlign = align
         this.ctx.textBaseline = 'middle'
@@ -298,8 +299,12 @@ export default class OutLabel {
     }
 
     draw(): void {
+        this.ctx.save()
+
         this.drawLabel()
         this.drawText()
+
+        this.ctx.restore()
     }
 
     update(view: any, elements: any, max: number): void {

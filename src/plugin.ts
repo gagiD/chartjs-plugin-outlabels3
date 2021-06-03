@@ -21,7 +21,6 @@ export default {
         const ctx = chart.ctx
 
         ctx.save()
-
         for (let i = 0; i < elements.length; ++i) {
             const el = elements[i]
 
@@ -54,7 +53,10 @@ export default {
         ctx.restore()
     },
 
-    afterDatasetDraw: function (_chart, args) {
+    afterDatasetDraw: function (chart, args) {
+        const ctx = chart.ctx
+        ctx.save()
+
         const elements = args.meta.data || []
         for (let i = 0; i < elements.length; ++i) {
             const label = outLabels.get(i)
@@ -66,7 +68,10 @@ export default {
 
             label.update(el, elements, i)
             label.drawLine()
+
             label.draw()
         }
+
+        ctx.restore()
     },
 } as OutLabelsPlugin

@@ -6,9 +6,9 @@ export class PaddingOptions {
 }
 
 export class FontOptions {
-    family?: string
+    family = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
     size?: number
-    style?: 'normal' | 'italic' | 'oblique' | 'initial' | 'inherit' = undefined
+    style?: 'normal' | 'italic' | 'oblique' | 'initial' | 'inherit' = 'normal'
     weight?: string
     resizable = true
     minSize?: number
