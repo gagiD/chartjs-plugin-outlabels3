@@ -1,6 +1,6 @@
 {
   "name": "chartjs-plugin-outlabels3",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "module": "dist/chartjs-plugin-outlabels3.esm.js",
   "browser": "dist/chartjs-plugin-outlabels3.umd.js",
   "browserMin": "dist/chartjs-plugin-outlabels3.umd.min.js",
