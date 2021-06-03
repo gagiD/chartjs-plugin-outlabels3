@@ -1,6 +1,6 @@
 {
   "name": "chartjs-plugin-outlabels3",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "module": "dist/chartjs-plugin-outlabels3.esm.js",
   "browser": "dist/chartjs-plugin-outlabels3.umd.js",
   "browserMin": "dist/chartjs-plugin-outlabels3.umd.min.js",
@@ -11,14 +11,15 @@
     "@rollup/plugin-typescript": "^8",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
+    "chart.js": "^3",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.3.0",
     "rollup": "^2.50",
+    "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2",
-    "typescript": "^4",
-    "chart.js": "^3"
+    "typescript": "^4"
   },
   "peerDependencies": {
     "chart.js": "^3"
