@@ -1,4 +1,5 @@
 import { Chart, Plugin } from 'chart.js'
+import { resolve } from 'chart.js/helpers'
 import { AnyObject } from 'chart.js/types/basic'
 import OutLabel from './OutLabel'
 import OutLabelsContext from './OutLabelsContext'
@@ -16,7 +17,6 @@ export default {
         const config = Object.assign(new OutLabelsOptions(), options)
         const labels = chart.config.data.labels
         const dataset = chart.data.datasets[args.index]
-        const display = config && config.display
         const elements = args.meta.data
         const ctx = chart.ctx
 
@@ -39,11 +39,13 @@ export default {
                 percent: percent,
             } as OutLabelsContext
 
+            const display = resolve([config.display, false], context, i)
             if (display && el && chart.getDataVisibility(args.index)) {
                 try {
                     const newLabel = new OutLabel(ctx, el, i, config, context)
                     outLabels.set(i, newLabel)
                 } catch (e) {
+                    console.log(e)
                     //newLabel = null
                 }
             }

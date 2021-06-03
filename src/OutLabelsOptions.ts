@@ -17,9 +17,14 @@ export class FontOptions {
     lineSize = 0
 }
 
+// eslint-disable-next-line no-unused-vars
+export type BooleanCallback = (item: any) => boolean
+// eslint-disable-next-line no-unused-vars
+export type StringCallback = (item: any) => string
+
 export default class OutLabelsOptions {
-    display = true
-    text = '%l %p'
+    display: boolean | BooleanCallback = true
+    text: string | StringCallback = '%l %p'
     textAlign = 'center'
     color = 'white'
     borderRadius = 0

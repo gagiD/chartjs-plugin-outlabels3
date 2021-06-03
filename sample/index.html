@@ -12,7 +12,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
-    <script src="../dist/chartjs-plugin-outlabels.umd.js"></script>
+    <script src="../dist/chartjs-plugin-outlabels3.umd.js"></script>
     <script>
       let ctx = document.getElementById('ctx')
 
@@ -32,11 +32,22 @@
           radius: '50%',
           plugins: {
             outlabels: {
-              display: true,
+              display: item => {
+                return item.percent > 0
+              },
+              text: '%p',
+              color: 'white',
+              //stretch: 15,
+              percentPrecision: 2,
+              font: {
+                resizable: true,
+                minSize: 10,
+                maxSize: 16,
+              },
             },
           },
         },
-        plugins: [window['chartjs-plugin-outlabels']],
+        plugins: [window['chartjs-plugin-outlabels3']],
       })
     </script>
   </body>

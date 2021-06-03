@@ -1,4 +1,7 @@
-import OutLabelsOptions, { FontOptions } from './OutLabelsOptions'
+import OutLabelsOptions, {
+    FontOptions,
+    StringCallback,
+} from './OutLabelsOptions'
 import { resolve, toPadding } from 'chart.js/helpers'
 import {
     drawRoundedRect,
@@ -16,7 +19,7 @@ import OutLabelsContext from './OutLabelsContext'
 export default class OutLabel {
     ctx: CanvasRenderingContext2D
 
-    encodedText: string
+    encodedText: string | StringCallback
     text: string
     lines: RegExpMatchArray
     label: string
@@ -50,7 +53,7 @@ export default class OutLabel {
 
         // Init text
         const label = context.labels[index]
-        let text = resolve([config.text], context, index)
+        let text = resolve([config.text], context, index) as string
         if (!text) text = '%l %p'
 
         /* Replace label marker */
@@ -110,6 +113,7 @@ export default class OutLabel {
         this.value = context.value
 
         // Init style
+        const fontConfig = Object.assign(new FontOptions(), config.font)
         this.style = {
             backgroundColor: resolve(
                 [config.backgroundColor, 'black'],
@@ -123,7 +127,7 @@ export default class OutLabel {
             lineColor: resolve([config.lineColor, 'black'], context, index),
             color: resolve([config.color, 'white'], context, index),
             font: parseFont(
-                resolve([config.font, new FontOptions()]) ?? config.font,
+                resolve([fontConfig]) ?? fontConfig,
                 parseFloat(ctx.canvas.style.height.slice(0, -2))
             ),
             padding: toPadding(resolve([config.padding, 0], context, index)),
