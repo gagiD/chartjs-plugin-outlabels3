@@ -9,16 +9,22 @@ declare type OutLabelsPlugin = Plugin<'doughnut', AnyObject>
 
 //const LABEL_KEY = '$outlabels'
 
-const outLabels: Map<number, OutLabel> = new Map()
+const outLabels: Map<string, Map<number, OutLabel>> = new Map()
 
 export default {
     id: 'outlabels',
+    beforeInit: function (chart) {
+        outLabels.set(chart.id, new Map())
+    },
     afterDatasetUpdate: function (chart: Chart<'doughnut'>, args, options) {
         const config = Object.assign(new OutLabelsOptions(), options)
         const labels = chart.config.data.labels
         const dataset = chart.data.datasets[args.index]
         const elements = args.meta.data
         const ctx = chart.ctx
+
+        const chartOutlabels = outLabels.get(chart.id)
+        if (!chartOutlabels) return
 
         ctx.save()
         for (let i = 0; i < elements.length; ++i) {
@@ -42,7 +48,7 @@ export default {
             if (display && el && chart.getDataVisibility(args.index)) {
                 try {
                     const newLabel = new OutLabel(ctx, el, i, config, context)
-                    outLabels.set(i, newLabel)
+                    chartOutlabels.set(i, newLabel)
                 } catch (e) {
                     console.log(e)
                     //newLabel = null
@@ -52,14 +58,16 @@ export default {
 
         ctx.restore()
     },
-
     afterDatasetDraw: function (chart, args) {
         const ctx = chart.ctx
         ctx.save()
 
+        const chartOutlabels = outLabels.get(chart.id)
+        if (!chartOutlabels) return
+
         const elements = args.meta.data || []
         for (let i = 0; i < elements.length; ++i) {
-            const label = outLabels.get(i)
+            const label = chartOutlabels.get(i)
             if (!label) {
                 continue
             }
