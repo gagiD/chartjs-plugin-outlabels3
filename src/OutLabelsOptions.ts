@@ -30,7 +30,7 @@ export default class OutLabelsOptions {
     borderRadius = 0
     borderWidth = 0
     lineWidth = 2
-    stretch = 40
+    length = 40
     percentPrecision = 1
     valuePrecision = 3
 

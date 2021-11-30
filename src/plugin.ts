@@ -3,18 +3,17 @@ import { resolve } from 'chart.js/helpers'
 import { AnyObject } from 'chart.js/types/basic'
 import OutLabel from './OutLabel'
 import OutLabelsContext from './OutLabelsContext'
+import OutLabelsManager from './OutLabelsManager'
 import OutLabelsOptions from './OutLabelsOptions'
 
 declare type OutLabelsPlugin = Plugin<'doughnut', AnyObject>
 
-//const LABEL_KEY = '$outlabels'
-
-const outLabels: Map<string, Map<number, OutLabel>> = new Map()
+const outLabelsManager = new OutLabelsManager()
 
 export default {
     id: 'outlabels',
     beforeInit: function (chart) {
-        outLabels.set(chart.id, new Map())
+        outLabelsManager.set(chart.id)
     },
     afterDatasetUpdate: function (chart: Chart<'doughnut'>, args, options) {
         const config = Object.assign(new OutLabelsOptions(), options)
@@ -23,12 +22,10 @@ export default {
         const elements = args.meta.data
         const ctx = chart.ctx
 
-        const chartOutlabels = outLabels.get(chart.id)
-        if (!chartOutlabels) return
-
         ctx.save()
         for (let i = 0; i < elements.length; ++i) {
             const el = elements[i]
+            let newLabel = null
 
             const percent =
                 dataset.data[i] /
@@ -47,38 +44,38 @@ export default {
             const display = resolve([config.display, false], context, i)
             if (display && el && chart.getDataVisibility(args.index)) {
                 try {
-                    const newLabel = new OutLabel(ctx, el, i, config, context)
-                    chartOutlabels.set(i, newLabel)
+                    newLabel = new OutLabel(ctx, i, config, context)
                 } catch (e) {
-                    console.log(e)
-                    //newLabel = null
+                    console.warn(e)
+                    newLabel = null
                 }
             }
+
+            if (newLabel) outLabelsManager.setLabel(chart.id, i, newLabel)
         }
 
         ctx.restore()
     },
-    afterDatasetDraw: function (chart, args) {
+    afterDatasetDraw: function (chart: Chart<'doughnut'>, args) {
         const ctx = chart.ctx
+        const elements = args.meta.data
         ctx.save()
 
-        const chartOutlabels = outLabels.get(chart.id)
+        const chartOutlabels = outLabelsManager.get(chart.id)
         if (!chartOutlabels) return
 
-        const elements = args.meta.data || []
-        for (let i = 0; i < elements.length; ++i) {
-            const label = chartOutlabels.get(i)
-            if (!label) {
-                continue
-            }
+        chartOutlabels.forEach(label => {
+            label.positionCenter(elements[label.index])
+            label.updateRects()
+        })
 
-            const el = elements[i]
+        outLabelsManager.avoidOverlap(chart)
 
-            label.update(el, elements, i)
-            label.drawLine()
-
+        chartOutlabels.forEach(label => {
+            label.updateRects()
             label.draw()
-        }
+            label.drawLine()
+        })
 
         ctx.restore()
     },

@@ -1,91 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <div style="width: 400px">
-      <canvas id="ctx" width="400" height="400"></canvas>
 
-      <canvas id="ctx2" width="400" height="400"></canvas>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
-    <script src="../dist/chartjs-plugin-outlabels3.umd.js"></script>
-    <script>
-      let ctx = document.getElementById('ctx')
+<body>
+  <div style="width: 400px">
+    <canvas id="ctx" width="400" height="400"></canvas>
 
-      let chart = new window.Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: [10, 5, 65, 33, 42],
-              backgroundColor: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+    <canvas id="ctx2" width="400" height="400"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js"></script>
+  <script src="../dist/chartjs-plugin-outlabels3.umd.js"></script>
+  <script>
+    let ctx = document.getElementById('ctx')
+
+    let chart = new window.Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+        datasets: [
+          {
+            label: 'Dataset 1',
+            data: [10, 5, 65, 33, 42],
+            backgroundColor: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+          },
+        ],
+      },
+      options: {
+        radius: '50%',
+        plugins: {
+          outlabels: {
+            display: item => {
+              return item.percent > 0
             },
-          ],
-        },
-        options: {
-          radius: '50%',
-          plugins: {
-            outlabels: {
-              display: item => {
-                return item.percent > 0
-              },
-              text: '%p',
-              color: 'white',
-              //stretch: 15,
-              percentPrecision: 2,
-              font: {
-                resizable: true,
-                minSize: 10,
-                maxSize: 16,
-              },
+            text: '%p',
+            color: 'white',
+            //stretch: 15,
+            percentPrecision: 2,
+            font: {
+              resizable: true,
+              minSize: 10,
+              maxSize: 16,
             },
           },
         },
-        plugins: [window['chartjs-plugin-outlabels3']],
-      })
+      },
+      plugins: [window['chartjs-plugin-outlabels3']],
+    })
 
-      let ctx2 = document.getElementById('ctx2')
-      let chart2 = new window.Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-          labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
-          datasets: [
-            {
-              label: 'Dataset 1',
-              data: [1, 5, 42, 33, 24],
-              backgroundColor: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+    let ctx2 = document.getElementById('ctx2')
+    let chart2 = new window.Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+        datasets: [
+          {
+            label: 'Dataset 1',
+            data: [1, 5, 42, 33, 24],
+            backgroundColor: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+          },
+        ],
+      },
+      options: {
+        radius: '50%',
+        plugins: {
+          outlabels: {
+            display: item => {
+              return item.percent > 0
             },
-          ],
-        },
-        options: {
-          radius: '50%',
-          plugins: {
-            outlabels: {
-              display: item => {
-                return item.percent > 0
-              },
-              text: '%p',
-              color: 'white',
-              //stretch: 15,
-              percentPrecision: 2,
-              font: {
-                resizable: true,
-                minSize: 10,
-                maxSize: 16,
-              },
+            text: '%v [%p]',
+            color: 'white',
+            //stretch: 15,
+            percentPrecision: 2,
+            font: {
+              resizable: true,
+              minSize: 10,
+              maxSize: 16,
             },
           },
         },
-        plugins: [window['chartjs-plugin-outlabels3']],
-      })
-    </script>
-  </body>
+      },
+      plugins: [window['chartjs-plugin-outlabels3']],
+    })
+  </script>
+</body>
+
 </html>

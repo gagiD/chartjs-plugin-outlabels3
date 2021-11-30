@@ -1,6 +1,5 @@
-import { ArcProps, Chart } from 'chart.js'
+import { Chart } from 'chart.js'
 import { valueOrDefault, isNullOrUndef, toLineHeight } from 'chart.js/helpers'
-import Center from './Center'
 import { FontOptions } from './OutLabelsOptions'
 import Size from './Size'
 
@@ -110,50 +109,5 @@ export function drawRoundedRect(
         ctx.moveTo(x, y)
     } else {
         ctx.rect(x, y, w, h)
-    }
-}
-
-export function positionCenter(arc: ArcProps, stretch: number): Center {
-    const angle = (arc.startAngle + arc.endAngle) / 2
-    const cosA = Math.cos(angle)
-    const sinA = Math.sin(angle)
-    const d = arc.outerRadius
-
-    const stretchedD = d + stretch
-    return {
-        x: arc.x + cosA * stretchedD,
-        y: arc.y + sinA * stretchedD,
-        d: stretchedD,
-        arc: arc,
-        anchor: {
-            x: arc.x + cosA * d,
-            y: arc.y + sinA * d,
-        },
-        copy: {
-            x: arc.x + cosA * stretchedD,
-            y: arc.y + sinA * stretchedD,
-        },
-    }
-}
-
-export function moveFromAnchor(center: Center, dist: number): Center {
-    const arc = center.arc
-    let d = center.d
-    const angle = (arc.startAngle + arc.endAngle) / 2
-    const cosA = Math.cos(angle)
-    const sinA = Math.sin(angle)
-
-    d += dist
-
-    return {
-        x: arc.x + cosA * d,
-        y: arc.y + sinA * d,
-        d: d,
-        arc: arc,
-        anchor: center.anchor,
-        copy: {
-            x: arc.x + cosA * d,
-            y: arc.y + sinA * d,
-        },
     }
 }

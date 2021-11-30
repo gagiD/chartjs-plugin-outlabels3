@@ -3,22 +3,17 @@ import OutLabelsOptions, {
     StringCallback,
 } from './OutLabelsOptions'
 import { resolve, toPadding } from 'chart.js/helpers'
-import {
-    drawRoundedRect,
-    getFontString,
-    moveFromAnchor,
-    parseFont,
-    positionCenter,
-    textSize,
-} from './helpers'
+import { drawRoundedRect, getFontString, parseFont, textSize } from './helpers'
 import Size from './Size'
 import { Point } from 'chart.js'
 import Rect from './Rect'
-import Center from './Center'
 import OutLabelsContext from './OutLabelsContext'
 
 export default class OutLabel {
     ctx: CanvasRenderingContext2D
+    index: number
+    context: OutLabelsContext
+    arc: any
 
     encodedText: string | StringCallback
     text: string
@@ -28,20 +23,25 @@ export default class OutLabel {
 
     style: any
 
-    stretch: number
+    length: number
     size: Size
-    offsetStep: number
-    offset: Point
-    predictedOffset: Point
 
-    textRect: Rect = { height: 0, width: 0, x: 0, y: 0 }
-    labelRect: Rect = { height: 0, width: 0, x: 0, y: 0 }
+    x1!: number
+    y1!: number
+    x!: number
+    y!: number
+    rect: Rect = { height: 0, width: 0, x: 0, y: 0 }
+    nx!: number
 
-    center: Center
+    get center(): Point {
+        return {
+            x: this.x,
+            y: this.y,
+        }
+    }
 
     constructor(
         ctx: CanvasRenderingContext2D,
-        el: any,
         index: number,
         config: OutLabelsOptions,
         context: OutLabelsContext
@@ -51,6 +51,8 @@ export default class OutLabel {
         }
 
         this.ctx = ctx
+        this.index = index
+        this.context = context
 
         // Init text
         const label = context.labels[index]
@@ -135,138 +137,69 @@ export default class OutLabel {
             textAlign: resolve([config.textAlign, 'left'], context, index),
         }
 
-        this.stretch = resolve([config.stretch, 40], context, index) ?? 0
+        this.length = resolve([config.length, 40], context, index) ?? 40
         this.size = textSize(ctx, this.lines, this.style.font)
-
-        this.offsetStep = this.size.width / 20
-        this.offset = {
-            x: 0,
-            y: 0,
-        }
-        this.predictedOffset = this.offset
-
-        const angle = -((el.startAngle + el.endAngle) / 2) / Math.PI
-        const val = Math.abs(angle - Math.trunc(angle))
-
-        if (val > 0.45 && val < 0.55) {
-            this.predictedOffset.x = 0
-        } else if (angle <= 0.45 && angle >= -0.45) {
-            this.predictedOffset.x = this.size.width / 2
-        } else if (angle >= -1.45 && angle <= -0.55) {
-            this.predictedOffset.x = -this.size.width / 2
-        }
-
-        this.center = positionCenter(el, this.stretch)
     }
 
-    computeLabelRect(): Rect {
-        let width = this.textRect.width + 2 * this.style.borderWidth
-        let height = this.textRect.height + 2 * this.style.borderWidth
-
-        const x =
-            this.textRect.x - this.style.padding.left - this.style.borderWidth
-        const y =
-            this.textRect.y - this.style.padding.top - this.style.borderWidth
-
-        width += this.style.padding.width
-        height += this.style.padding.height
-
+    computeRect(): Rect {
         return {
-            x: x,
-            y: y,
-            width: width,
-            height: height,
+            x:
+                this.x +
+                (this.nx < 0 ? -this.size.width : 0) -
+                this.style.padding.left -
+                this.style.borderWidth,
+            y:
+                this.y -
+                this.size.height / 2 -
+                this.style.padding.top -
+                this.style.borderWidth,
+            width:
+                this.size.width +
+                2 * this.style.borderWidth +
+                this.style.padding.width,
+            height:
+                this.size.height +
+                2 * this.style.borderWidth +
+                this.style.padding.height,
         }
-    }
-
-    computeTextRect(): Rect {
-        return {
-            x: this.center.x - this.size.width / 2,
-            y: this.center.y - this.size.height / 2,
-            width: this.size.width,
-            height: this.size.height,
-        }
-    }
-
-    getPoints(): Point[] {
-        return [
-            {
-                x: this.labelRect.x,
-                y: this.labelRect.y,
-            },
-            {
-                x: this.labelRect.x + this.labelRect.width,
-                y: this.labelRect.y,
-            },
-            {
-                x: this.labelRect.x + this.labelRect.width,
-                y: this.labelRect.y + this.labelRect.height,
-            },
-            {
-                x: this.labelRect.x,
-                y: this.labelRect.y + this.labelRect.height,
-            },
-        ]
-    }
-
-    containsPoint(point: Point, offset: number): boolean {
-        if (!offset) {
-            offset = 5
-        }
-
-        return (
-            this.labelRect.x - offset <= point.x &&
-            point.x <= this.labelRect.x + this.labelRect.width + offset &&
-            this.labelRect.y - offset <= point.y &&
-            point.y <= this.labelRect.y + this.labelRect.height + offset
-        )
     }
 
     drawText(): void {
-        const align = this.style.textAlign
         const font = this.style.font
         const color = this.style.color
-        let x, y, idx
 
         if (!this.lines.length || !color) {
             return
         }
 
-        x = this.textRect.x
-        y = this.textRect.y + font.lineSize / 2
-
-        if (align === 'center') {
-            x += this.textRect.width / 2
-        } else if (align === 'end' || align === 'right') {
-            x += this.textRect.width
-        }
-
         this.ctx.font = getFontString(this.style.font)
         this.ctx.fillStyle = color
-        this.ctx.textAlign = align
+        this.ctx.textAlign = this.nx < 0 ? 'right' : 'left'
         this.ctx.textBaseline = 'middle'
 
-        for (idx = 0; idx < this.lines.length; ++idx) {
+        const x = this.x
+        let y = this.y
+        for (let idx = 0; idx < this.lines.length; ++idx) {
             this.ctx.fillText(
                 this.lines[idx],
                 Math.round(x),
                 Math.round(y),
-                Math.round(this.textRect.width)
+                Math.round(this.size.width)
             )
 
             y += font.lineSize
         }
     }
 
-    drawLabel(): void {
+    drawRect(): void {
         this.ctx.beginPath()
 
         drawRoundedRect(
             this.ctx,
-            Math.round(this.labelRect.x),
-            Math.round(this.labelRect.y),
-            Math.round(this.labelRect.width),
-            Math.round(this.labelRect.height),
+            this.rect.x,
+            this.rect.y,
+            this.rect.width,
+            this.rect.height,
             this.style.borderRadius
         )
         this.ctx.closePath()
@@ -291,87 +224,51 @@ export default class OutLabel {
         this.ctx.lineWidth = this.style.lineWidth
         this.ctx.lineJoin = 'miter'
         this.ctx.beginPath()
-        this.ctx.moveTo(this.center.anchor.x, this.center.anchor.y)
-        this.ctx.lineTo(this.center.copy.x, this.center.copy.y)
+
+        this.ctx.moveTo(this.x1, this.y1)
+        this.ctx.lineTo(this.x, this.y)
         this.ctx.stroke()
 
         this.ctx.restore()
     }
 
     draw(): void {
-        this.ctx.save()
-
-        this.drawLabel()
+        this.drawRect()
         this.drawText()
-
-        this.ctx.restore()
     }
 
-    update(view: any, elements: any, max: number): void {
-        this.center = positionCenter(view, this.stretch)
-        this.moveLabelToOffset()
-
-        this.center.x += this.offset.x
-        this.center.y += this.offset.y
-
-        let valid = false
-
-        while (!valid) {
-            this.textRect = this.computeTextRect()
-            this.labelRect = this.computeLabelRect()
-            const rectPoints = this.getPoints()
-
-            valid = true
-
-            for (let e = 0; e < max; ++e) {
-                const element = elements[e]
-                if (!element) {
-                    continue
-                }
-
-                valid = true
-                if (valid) continue
-
-                const elPoints = element.getPoints()
-
-                for (let p = 0; p < rectPoints.length; ++p) {
-                    if (element.containsPoint(rectPoints[p])) {
-                        valid = false
-                        break
-                    }
-
-                    if (this.containsPoint(elPoints[p], 0)) {
-                        valid = false
-                        break
-                    }
-                }
-            }
-
-            if (!valid) {
-                this.center = moveFromAnchor(this.center, 1)
-                this.center.x += this.offset.x
-                this.center.y += this.offset.y
-            }
-        }
+    updateRects(): void {
+        this.rect = this.computeRect()
     }
 
-    moveLabelToOffset(): void {
-        if (
-            this.predictedOffset.x <= 0 &&
-            this.offset.x > this.predictedOffset.x
-        ) {
-            this.offset.x -= this.offsetStep
-            if (this.offset.x <= this.predictedOffset.x) {
-                this.offset.x = this.predictedOffset.x
-            }
-        } else if (
-            this.predictedOffset.x >= 0 &&
-            this.offset.x < this.predictedOffset.x
-        ) {
-            this.offset.x += this.offsetStep
-            if (this.offset.x >= this.predictedOffset.x) {
-                this.offset.x = this.predictedOffset.x
-            }
-        }
+    positionCenter(arc: any): void {
+        this.arc = arc
+        const chart = this.context.chart
+
+        const midAngle = (arc.startAngle + arc.endAngle) / 2
+        const nx = Math.cos(midAngle)
+        const ny = Math.sin(midAngle)
+        //const d = arc.outerRadius
+        /*
+        const viewWidth = chart.chartArea.width
+        const viewLeft = chart.chartArea.x
+        const viewTop = chart.chartArea.y
+        const viewHeight = chart.chartArea.height */
+
+        const cx = (chart.chartArea.left + chart.chartArea.right) / 2
+        const cy = (chart.chartArea.top + chart.chartArea.bottom) / 2
+        const r = arc.outerRadius
+
+        const x1 = r * nx + cx
+        const y1 = r * ny + cy
+
+        const x2 = x1 + nx * this.length
+        const y2 = y1 + ny * this.length
+
+        this.x1 = x1
+        this.y1 = y1
+        this.x = x2
+        this.y = y2
+        this.nx = nx
     }
 }
