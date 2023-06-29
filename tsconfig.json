@@ -2,15 +2,14 @@
   "compilerOptions": {
     "target": "es6",
     "module": "esnext",
+    "moduleResolution": "node",
     "lib": [
       "esnext",
       "dom"
     ],
-    "moduleResolution": "node",
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
     "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

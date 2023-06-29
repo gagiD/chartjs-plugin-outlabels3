@@ -1,5 +1,5 @@
 import { Chart } from 'chart.js'
-import { valueOrDefault, isNullOrUndef, toLineHeight } from 'chart.js/helpers'
+import { valueOrDefault, isNullOrUndef, toLineHeight } from 'chart.js/helpers/helpers.esm'
 import { FontOptions } from './OutLabelsOptions'
 import Size from './Size'
 

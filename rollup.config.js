@@ -1,19 +1,19 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import { terser } from 'rollup-plugin-terser'
+import dts from "rollup-plugin-dts"
 
-import pkg from './package.json'
-const dependencies = Object.keys(pkg.dependencies)
-const peerDependencies = Object.keys(pkg.peerDependencies)
-const allDependencies = dependencies.concat(peerDependencies)
+const { name, main, module: _module } = require('./package.json');
 
-const name = pkg.name
+const external = [
+  'chart.js',
+  'chart.js/helpers'
+];
+
 const globals = {
   'chart.js': 'Chart',
   'chart.js/helpers': 'Chart.helpers',
 }
-allDependencies.push('chart.js/helpers')
 
 export default [
   // browser-friendly UMD build
@@ -21,36 +21,40 @@ export default [
     input: 'src/index.ts',
     output: {
       name,
-      file: pkg.browser,
+      file: main,
       format: 'umd',
       indent: false,
       globals,
     },
-
-    plugins: [resolve(), commonjs(), typescript()],
-    external: allDependencies,
+    plugins: [nodeResolve(), typescript()],
+    external: external,
   },
   {
     input: 'src/index.ts',
     output: {
       name,
-      file: pkg.browserMin,
+      file: main.replace('.js', '.min.js'),
       format: 'umd',
       indent: false,
       globals,
     },
-    plugins: [resolve(), commonjs(), typescript(), terser()],
-    external: allDependencies,
+    plugins: [nodeResolve(), typescript(), terser()],
+    external: external,
   },
   {
     input: 'src/index.esm.ts',
     output: {
       name,
-      file: pkg.module,
+      file: _module,
       format: 'esm',
       indent: false,
     },
-    plugins: [resolve(), commonjs(), typescript()],
-    external: allDependencies,
+    plugins: [nodeResolve(), typescript()],
+    external: external,
+  },
+  {
+    input: './src/index.ts',
+    output: [{ file: `dist/index.d.ts`, format: 'es' }],
+    plugins: [dts()],
   },
 ]
