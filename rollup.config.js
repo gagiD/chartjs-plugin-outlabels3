@@ -1,28 +1,25 @@
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import typescript from '@rollup/plugin-typescript'
-import { terser } from 'rollup-plugin-terser'
-import dts from "rollup-plugin-dts"
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
+import { terser } from "rollup-plugin-terser";
+import dts from "rollup-plugin-dts";
 
-const { name, main, module: _module } = require('./package.json');
+const { name, main, module: _module } = require("./package.json");
 
-const external = [
-  'chart.js',
-  'chart.js/helpers'
-];
+const external = ["chart.js", "chart.js/helpers"];
 
 const globals = {
-  'chart.js': 'Chart',
-  'chart.js/helpers': 'Chart.helpers',
-}
+  "chart.js": "Chart",
+  "chart.js/helpers": "Chart.helpers",
+};
 
 export default [
   // browser-friendly UMD build
   {
-    input: 'src/index.ts',
+    input: "src/index.ts",
     output: {
       name,
       file: main,
-      format: 'umd',
+      format: "umd",
       indent: false,
       globals,
     },
@@ -30,11 +27,11 @@ export default [
     external: external,
   },
   {
-    input: 'src/index.ts',
+    input: "src/index.ts",
     output: {
       name,
-      file: main.replace('.js', '.min.js'),
-      format: 'umd',
+      file: main.replace(".js", ".min.js"),
+      format: "umd",
       indent: false,
       globals,
     },
@@ -42,19 +39,20 @@ export default [
     external: external,
   },
   {
-    input: 'src/index.esm.ts',
+    input: "src/index.esm.ts",
     output: {
       name,
       file: _module,
-      format: 'esm',
+      format: "esm",
       indent: false,
     },
     plugins: [nodeResolve(), typescript()],
     external: external,
   },
+  /*
   {
-    input: './src/index.ts',
-    output: [{ file: `dist/index.d.ts`, format: 'es' }],
-    plugins: [dts()],
-  },
-]
+    input: "./src/index.ts",
+    output: [{ file: `dist/index.d.ts`, format: "es" }],
+    plugins: [nodeResolve(), dts({})],
+  },*/
+];

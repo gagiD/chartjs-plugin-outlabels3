@@ -116,6 +116,13 @@
     "estree-walker" "^2.0.2"
     "picomatch" "^2.3.1"
 
+"@types/chart.js@^2.9.37":
+  "integrity" "sha512-9bosRfHhkXxKYfrw94EmyDQcdjMaQPkU1fH2tDxu8DWXxf1mjzWQAV4laJF51ZbC2ycYwNDvIm1rGez8Bug0vg=="
+  "resolved" "https://registry.npmjs.org/@types/chart.js/-/chart.js-2.9.37.tgz"
+  "version" "2.9.37"
+  dependencies:
+    "moment" "^2.10.2"
+
 "@types/estree@^1.0.0":
   "integrity" "sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA=="
   "resolved" "https://registry.npmjs.org/@types/estree/-/estree-1.0.1.tgz"
@@ -933,6 +940,11 @@
   "version" "3.0.4"
   dependencies:
     "brace-expansion" "^1.1.7"
+
+"moment@^2.10.2":
+  "integrity" "sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w=="
+  "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
+  "version" "2.29.4"
 
 "ms@2.1.2":
   "integrity" "sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w=="
