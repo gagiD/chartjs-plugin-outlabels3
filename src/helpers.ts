@@ -1,5 +1,5 @@
 import { Chart } from 'chart.js'
-import { valueOrDefault, isNullOrUndef, toLineHeight } from 'chart.js/helpers/helpers.esm'
+import { valueOrDefault, isNullOrUndef, toLineHeight } from 'chart.js/helpers'
 import { FontOptions } from './OutLabelsOptions'
 import Size from './Size'
 
@@ -50,7 +50,7 @@ export function parseFont(value: FontOptions, height: number): FontOptions {
         size = adaptTextSizeToHeight(height, value.minSize, value.maxSize)
     }
 
-    value.lineSize = toLineHeight(value.lineHeight.toString(), size)
+    value.lineSize = toLineHeight(value.lineHeight.toString(), size ?? 0)
 
     value.size = size
 
