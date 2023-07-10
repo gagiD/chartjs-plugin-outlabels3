@@ -1,6 +1,6 @@
 {
   "name": "chartjs-plugin-outlabels3",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "license": "MIT",
   "type": "module",
   "main": "dist/chartjs-plugin-outlabels3.js",
@@ -19,7 +19,7 @@
     "@rollup/plugin-typescript": "^11.1",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
-    "chart.js": "^3",
+    "chart.js": "^3.9",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
@@ -28,16 +28,17 @@
     "rollup-plugin-dts": "^4.0.1",
     "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2",
-    "typescript": "^4"
+    "typescript": "^4",
+    "vite": "^4.4.2"
   },
   "peerDependencies": {
     "chart.js": "^3"
   },
-  "dependencies": {},
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "sample:vite": "vite sample/vite/"
   },
   "files": [
     "dist"
