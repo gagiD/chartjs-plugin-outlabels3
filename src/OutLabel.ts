@@ -2,7 +2,7 @@ import OutLabelsOptions, {
     FontOptions,
     StringCallback,
 } from './OutLabelsOptions'
-import { resolve, toPadding } from 'chart.js/helpers'
+import { resolve, toPadding } from 'chart.js/helpers/helpers.esm'
 import { drawRoundedRect, getFontString, parseFont, textSize } from './helpers'
 import Size from './Size'
 import { Point } from 'chart.js'

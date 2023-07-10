@@ -1,5 +1,5 @@
 import { Chart, Plugin } from 'chart.js'
-import { resolve } from 'chart.js/helpers'
+import { resolve } from 'chart.js/helpers/helpers.esm'
 import { AnyObject } from 'chart.js/types/basic'
 import OutLabel from './OutLabel'
 import OutLabelsContext from './OutLabelsContext'
