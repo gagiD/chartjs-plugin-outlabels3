@@ -1,6 +1,6 @@
 {
   "name": "chartjs-plugin-outlabels3",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "license": "MIT",
   "main": "dist/chartjs-plugin-outlabels3.js",
   "module": "dist/chartjs-plugin-outlabels3.esm.js",
